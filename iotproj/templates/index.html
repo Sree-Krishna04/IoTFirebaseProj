@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IoT Data Simulation</title>
+    <link rel="stylesheet" href="static/style.css">
+
+</head>
+<body>
+    <div class="container">
+        <h1>IoT Data Simulation</h1>
+        
+        <!-- Form to get the number of iterations -->
+        <div class="form-container">
+            <form action="/simulate" method="post">
+                <label for="max_iterations">Enter Max Iterations:</label>
+                <input type="number" id="max_iterations" name="max_iterations" min="1" required>
+                <button type="submit">Start Simulation</button>
+            </form>
+        </div>
+        
+        <!-- Display results if available -->
+        {% if result_data %}
+            <div class="results-container">
+                <h2>Simulation Results ({{ max_iterations }} Iterations)</h2>
+                <div class="results">
+                    {% for entry in result_data %}
+                        <div class="entry">
+                            <h3>Iteration {{ entry.iteration }}</h3>
+                            <div class="data">
+                                <h4>Simulated Data:</h4>
+                                <ul>
+                                    <li><strong>Device ID:</strong> {{ entry.data.device_id }}</li>
+                                    <li><strong>Timestamp:</strong> {{ entry.data.timestamp }}</li>
+                                    <li><strong>Vibration:</strong> {{ entry.data.vibration }} </li>
+                                    <li><strong>Temperature:</strong> {{ entry.data.temperature }} °C</li>
+                                    <li><strong>Pressure:</strong> {{ entry.data.pressure }} Pa</li>
+                                    <li><strong>RPM:</strong> {{ entry.data.rpm }} RPM</li>
+                                    <li><strong>Oil Level:</strong> {{ entry.data.oil_level }}%</li>
+                                    <li><strong>Battery Status:</strong> {{ entry.data.battery_status }}%</li>
+                                </ul>
+                            </div>
+                            {% if entry.anomalies %}
+                                <div class="anomalies">
+                                    <h4>Anomalies Detected:</h4>
+                                    <ul>
+                                        {% for key, value in entry.anomalies.items() %}
+                                            <li><strong>{{ key | capitalize }}:</strong> {{ value }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            {% else %}
+                                <p>No anomalies detected.</p>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
